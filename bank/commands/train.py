@@ -1,5 +1,8 @@
 
-
+from bank.datas import load_training_data
 
 def cmd_train(args):
-    pass
+    dl = load_training_data()
+
+
+    print(dl)

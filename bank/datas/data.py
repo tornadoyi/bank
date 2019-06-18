@@ -33,8 +33,7 @@ class DataLoader(object):
     @staticmethod
     def split_datasets(xs, ys):
         idx = int(len(xs) * 0.2)
-
-        return xs[:, :-idx], ys[:, :-idx], xs[:, -idx:], ys[:, -idx:]
+        return xs[:, :-idx], ys[:-idx], xs[:, -idx:], ys[-idx:]
 
 
 
@@ -72,8 +71,10 @@ class DataLoader(object):
         splits = []
         for i in range(len(lines)):
             ln = lines[i]
-            s = ln.rstrip('\n').rstrip('\r').split()
+            s = ln.rstrip('\n').rstrip('\r').split(',')
             splits.append(s)
+
+        splits = np.array(splits, dtype=np.str)
 
         titles, datas = splits[0], splits[1:]
 
@@ -88,7 +89,8 @@ class DataLoader(object):
             f = embeded_dict[t]
             if f is None: continue
             _, x = f(datas[:, i])
-            em_datas = np.vstack([em_datas, x])
+
+            em_datas = np.concatenate([em_datas, x.reshape(len(datas), -1)], axis=1)
 
         return em_datas[:, :-1], em_datas[:, -1]
 
@@ -143,7 +145,7 @@ class DataLoader(object):
         def __month(ds): return __enum(
             ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'], ds)
 
-        def __day_of_week(ds): __enum(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], ds)
+        def __day_of_week(ds): return __enum(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], ds)
 
         def __pdays(ds):
             ds = ds.astype(np.float)

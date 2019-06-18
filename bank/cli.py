@@ -15,12 +15,12 @@ def parse_args():
     sparser = parser.add_subparsers()
 
     train = sparser.add_parser('train', help='train models')
-    train.set_defaults(func=partial(_parse_command, 'config'))
+    train.set_defaults(func=partial(_parse_command, 'train'))
     train.add_argument('-o', '--output', type=str, default=os.path.join('./'), help='checkpoint output path')
     train.add_argument('-c', '--continue', action='store_true', default=False, help='load previous checkpoint')
 
     train = sparser.add_parser('test', help='train models')
-    train.set_defaults(func=partial(_parse_command, 'config'))
+    train.set_defaults(func=partial(_parse_command, 'test'))
     train.add_argument('-i', '--input', type=str, default=os.path.join('./'), help='checkpoint input path')
     train.add_argument('-d', '--data', type=str, help='data path')
 
@@ -29,6 +29,7 @@ def parse_args():
         parser.print_help()
         sys.exit(0)
 
+    return args.func(args)
 
 
 
