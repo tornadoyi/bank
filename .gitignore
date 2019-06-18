@@ -2,4 +2,4 @@
 *.pyc
 build
 dist
-pyplus.egg-info
+bank.egg-info
