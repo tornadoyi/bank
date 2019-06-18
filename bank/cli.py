@@ -9,20 +9,24 @@ from bank.commands import cmd_test, cmd_train
 
 
 def parse_args():
+    from bank import checkpoints
     def _parse_command(cmd, args): return (cmd, args)
+
+    save_path = os.path.join(checkpoints.path(), 'bank')
 
     parser = argparse.ArgumentParser(prog='bank', description="homework of machine learning")
     sparser = parser.add_subparsers()
 
     train = sparser.add_parser('train', help='train models')
     train.set_defaults(func=partial(_parse_command, 'train'))
-    train.add_argument('-o', '--output', type=str, default=os.path.join('./'), help='checkpoint output path')
+    train.add_argument('-s', '--save-path', type=str, default=save_path, help='checkpoint output path')
     train.add_argument('-c', '--continue', action='store_true', default=False, help='load previous checkpoint')
+    train.add_argument('-n', '--nsteps', type=int, default=10000, help='training steps')
 
     train = sparser.add_parser('test', help='train models')
     train.set_defaults(func=partial(_parse_command, 'test'))
-    train.add_argument('-i', '--input', type=str, default=os.path.join('./'), help='checkpoint input path')
-    train.add_argument('-d', '--data', type=str, help='data path')
+    train.add_argument('-s', '--save-path', type=str, default=save_path, help='checkpoint output path')
+    train.add_argument('-d', '--data-path', type=str, help='data path')
 
     args = parser.parse_args()
     if getattr(args, 'func', None) is None:

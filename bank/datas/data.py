@@ -28,12 +28,15 @@ class DataLoader(object):
     @property
     def test(self): return self.__test_xs, self.__test_ys
 
+    @property
+    def xdims(self): return len(self.__xs[0])
+
 
 
     @staticmethod
     def split_datasets(xs, ys):
         idx = int(len(xs) * 0.2)
-        return xs[:, :-idx], ys[:-idx], xs[:, -idx:], ys[-idx:]
+        return xs[:-idx], ys[:-idx], xs[-idx:], ys[-idx:]
 
 
 

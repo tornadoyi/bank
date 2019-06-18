@@ -1,0 +1,2 @@
+model_checkpoint_path: "/Users/jason/Projects/bank/bank/checkpoints/bank"
+all_model_checkpoint_paths: "/Users/jason/Projects/bank/bank/checkpoints/bank"

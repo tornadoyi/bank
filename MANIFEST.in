@@ -1,3 +1,4 @@
 include MANIFEST.in
 include bank/VERSION
 include bank/datas/bankTraining.csv
+include bank/checkpoints/*
