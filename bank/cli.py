@@ -3,6 +3,7 @@ import sys
 import os
 import argparse
 from functools import partial
+import numpy as np
 
 from bank.commands import cmd_test, cmd_train
 
@@ -20,8 +21,8 @@ def parse_args():
     train = sparser.add_parser('train', help='train models')
     train.set_defaults(func=partial(_parse_command, 'train'))
     train.add_argument('-s', '--save-path', type=str, default=save_path, help='checkpoint output path')
-    train.add_argument('-c', '--continue', action='store_true', default=False, help='load previous checkpoint')
-    train.add_argument('-n', '--nsteps', type=int, default=10000, help='training steps')
+    train.add_argument('-r', '--restore', action='store_true', default=False, help='load previous checkpoint and train')
+    train.add_argument('-n', '--nsteps', type=int, default=np.inf, help='training steps')
 
     train = sparser.add_parser('test', help='train models')
     train.set_defaults(func=partial(_parse_command, 'test'))

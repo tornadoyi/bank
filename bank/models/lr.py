@@ -43,7 +43,7 @@ class LogisticsRegression(ModelBase):
         self._labels = tf.placeholder(shape=[None], dtype=tf.float32)
 
         l = self._inputs
-        hidden_layers = [128, 1]
+        hidden_layers = [256, 128, 1]
         for i in range(len(hidden_layers)):
             l = tf.layers.dense(
                 l,

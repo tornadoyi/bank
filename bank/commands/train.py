@@ -14,11 +14,17 @@ def cmd_train(args):
 
     # create model
     sess = tf.Session()
-    model = LogisticsRegression(sess, args.save_path, dl.xdims, 1e-3)
-    sess.run(tf.global_variables_initializer())
+    model = LogisticsRegression(sess, args.save_path, dl.xdims, 1e-5)
+    if args.restore:
+        model.restore()
+    else:
+        sess.run(tf.global_variables_initializer())
 
     last_time = time.time()
-    for i in range(args.nsteps):
+    i = 0
+    while True:
+        i += 1
+        if i >= args.nsteps: break
         xs, ys = ds.next_batch()
         loss, grad = model.train_step(xs, ys)
 
