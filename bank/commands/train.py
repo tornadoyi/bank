@@ -21,32 +21,36 @@ def cmd_train(args):
     else:
         sess.run(tf.global_variables_initializer())
 
-    save_time = log_time = time.time()
+    log_time = time.time()
+    best_acc = 0.0
     i = 0
     while True:
         # flush stdout
         sys.stdout.flush()
 
+        # check steps
         i += 1
         if i >= args.nsteps: break
+
+        # train
         xs, ys = ds.next_batch()
         loss, grad = model.train_step(xs, ys)
 
-        # save
-        if time.time() - save_time > 60.0:
-            save_time = time.time()
-            model.save()
+        # evaluate
+        xs, ys = dl.test
+        probs = model.predict(xs)
+        cond = (probs >= 0.5) == (ys == 1.0)
+        acc = np.sum(cond) / len(cond) * 100
 
         # output
-        if time.time() - log_time > 1.0:
+        if time.time() - log_time > 1.0 or acc > best_acc:
             log_time = time.time()
-
-            xs, ys = dl.test
-            probs = model.predict(xs)
-            cond = (probs >= 0.5) == (ys == 1.0)
-            acc = np.sum(cond) / len(cond) * 100
-
             print(loss, grad, acc)
+
+        # save
+        if acc > best_acc:
+            best_acc = acc
+            model.save()
 
     # save
     model.save()
