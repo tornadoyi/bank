@@ -177,7 +177,7 @@ class DataLoader(object):
             'duration': None,  # __norm10000,        # max 3643
             'campaign': __norm100,
             'pdays': __pdays,
-            'previous': __previous,
+            'previous': __norm10,
             'poutcome': __poutcome,
             'emp.var.rate': __float,
             'cons.price.idx': __norm100,
