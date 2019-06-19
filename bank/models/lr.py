@@ -10,9 +10,7 @@ class LogisticsRegression(ModelBase):
         super(LogisticsRegression, self).__init__(*args, **kwargs)
 
 
-
-
-    def train_step(self, xs, ys):
+    def _train(self, xs, ys):
         _, loss, grads = self._sess.run(
             [self._op_train, self._loss, self._grads],
             feed_dict = {
@@ -24,10 +22,11 @@ class LogisticsRegression(ModelBase):
         total_grads = 0
         for g in grads: total_grads += np.mean(np.abs(g))
 
-        return loss, total_grads / len(grads)
+        self._process['loss'] = loss
+        self._process['grad'] = total_grads / len(grads)
 
 
-    def predict(self, xs):
+    def _predict(self, xs):
         probs = self._sess.run(
             [self._op_predict],
             feed_dict={
@@ -37,7 +36,6 @@ class LogisticsRegression(ModelBase):
 
 
     def _create_model(self):
-
 
         self._inputs = tf.placeholder(shape=[None, self._xdims], dtype=tf.float32)
         self._labels = tf.placeholder(shape=[None], dtype=tf.float32)
@@ -65,7 +63,7 @@ class LogisticsRegression(ModelBase):
 
         # train
         optimizer = tf.train.GradientDescentOptimizer(self._learning_rate)
-        vars = tf.global_variables()
+        vars = tf.global_variables(tf.get_variable_scope().name)
         self._grads = tf.gradients(self._loss, vars)
         self._op_train = optimizer.apply_gradients(zip(self._grads, vars))
 

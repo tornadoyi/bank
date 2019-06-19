@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow as tf
 from bank.datas import load_training_data
 from bank.models import LogisticsRegression
+from prettytable import PrettyTable
 
 BATCH = 128
 
@@ -11,7 +12,6 @@ def cmd_train(args):
     # load datas
     dl = load_training_data()
     ds = rolling_dataset(*dl.training, BATCH)
-
 
     # create model
     sess = tf.Session()
@@ -22,8 +22,7 @@ def cmd_train(args):
         sess.run(tf.global_variables_initializer())
 
     log_time = time.time()
-    best_acc = 0.0
-    i = 0
+    i = model.steps
     while True:
         # flush stdout
         sys.stdout.flush()
@@ -34,22 +33,32 @@ def cmd_train(args):
 
         # train
         xs, ys = ds.next_batch()
-        loss, grad = model.train_step(xs, ys)
+        model.train(xs, ys)
 
         # evaluate
         xs, ys = dl.test
         probs = model.predict(xs)
         cond = (probs >= 0.5) == (ys == 1.0)
-        acc = np.sum(cond) / len(cond) * 100
+        acc = np.sum(cond) / len(cond)
+        best_acc = model.accuracy
 
         # output
         if time.time() - log_time > 1.0 or acc > best_acc:
             log_time = time.time()
-            print(loss, grad, acc)
+            # output
+            p = model.process
+            t = PrettyTable(['steps', 'accuracy', 'loss', 'gradient'])
+            t.add_row([
+                i,
+                acc * 100,
+                p['loss'],
+                p['grad']
+            ])
+            print(t)
 
         # save
         if acc > best_acc:
-            best_acc = acc
+            model.accuracy = acc
             model.save()
 
     # save
