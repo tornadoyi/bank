@@ -139,7 +139,12 @@ class DataLoader(object):
                   'university.degree', 'unknown']
             return __enum(ts, ds)
 
-        def __check(ds): return __enum(['no', 'yes'], ds)
+        def __check(ds):
+            fs = np.empty(len(ds), dtype=np.float)
+            fs[ds == 'no'] = 0.0
+            fs[ds == 'yes'] = 1.0
+            return None, fs
+
 
         def __check3(ds): return __enum(['no', 'unknown', 'yes'], ds)
 
