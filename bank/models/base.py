@@ -29,9 +29,10 @@ class ModelBase(object):
 
 
     def save(self, *args, **kwargs):
-
         self._saver.save(self._sess, self._save_path, *args, **kwargs)
+        print('save model to {}'.format(self._save_path))
 
 
     def restore(self):
         self._saver.restore(self._sess, self._save_path)
+        print('restore model from {}'.format(self._save_path))

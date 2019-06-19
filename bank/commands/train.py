@@ -14,13 +14,13 @@ def cmd_train(args):
 
     # create model
     sess = tf.Session()
-    model = LogisticsRegression(sess, args.save_path, dl.xdims, 1e-5)
+    model = LogisticsRegression(sess, args.save_path, dl.xdims, 0.1)
     if args.restore:
         model.restore()
     else:
         sess.run(tf.global_variables_initializer())
 
-    last_time = time.time()
+    save_time = log_time = time.time()
     i = 0
     while True:
         i += 1
@@ -29,18 +29,20 @@ def cmd_train(args):
         loss, grad = model.train_step(xs, ys)
 
         # save
-        if i % 10 == 0: model.save()
+        if time.time() - save_time > 60.0:
+            save_time = time.time()
+            model.save()
 
         # output
-        if time.time() - last_time < 1.0: continue
-        last_time = time.time()
+        if time.time() - log_time > 1.0:
+            log_time = time.time()
 
-        xs, ys = dl.test
-        probs = model.predict(xs)
-        cond = (probs >= 0.5) == (ys == 1.0)
-        acc = np.sum(cond) / len(cond) * 100
+            xs, ys = dl.test
+            probs = model.predict(xs)
+            cond = (probs >= 0.5) == (ys == 1.0)
+            acc = np.sum(cond) / len(cond) * 100
 
-        print(loss, grad, acc)
+            print(loss, grad, acc)
 
     # save
     model.save()

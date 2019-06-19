@@ -43,7 +43,7 @@ class LogisticsRegression(ModelBase):
         self._labels = tf.placeholder(shape=[None], dtype=tf.float32)
 
         l = self._inputs
-        hidden_layers = [256, 128, 1]
+        hidden_layers = [128, 64, 1]
         for i in range(len(hidden_layers)):
             l = tf.layers.dense(
                 l,
@@ -51,8 +51,8 @@ class LogisticsRegression(ModelBase):
                 activation=tf.nn.tanh,
                 kernel_initializer=tf.truncated_normal_initializer(stddev=0.1),
                 bias_initializer=tf.truncated_normal_initializer(stddev=0.1),
-                #kernel_regularizer=slim.l2_regularizer(0.05),
-                #bias_regularizer=slim.l2_regularizer(0.05),
+                kernel_regularizer=slim.l2_regularizer(0.05),
+                bias_regularizer=slim.l2_regularizer(0.05),
             )
 
         lout = tf.reshape(l, shape=[-1])
@@ -64,7 +64,7 @@ class LogisticsRegression(ModelBase):
 
 
         # train
-        optimizer = tf.train.AdamOptimizer(self._learning_rate)
+        optimizer = tf.train.GradientDescentOptimizer(self._learning_rate)
         vars = tf.global_variables()
         self._grads = tf.gradients(self._loss, vars)
         self._op_train = optimizer.apply_gradients(zip(self._grads, vars))
