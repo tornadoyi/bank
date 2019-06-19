@@ -37,6 +37,8 @@ setup(name=NAME,
       python_requires='>=3.5',
       install_requires = [
             'argparse',
+            'PrettyTable',
+            'PTable'
       ],
       entry_points = {
             'console_scripts': [
