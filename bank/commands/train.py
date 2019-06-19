@@ -15,7 +15,7 @@ def cmd_train(args):
 
     # create model
     sess = tf.Session()
-    model = LogisticsRegression(sess, args.save_path, dl.xdims, 0.1)
+    model = LogisticsRegression(sess, args.save_path, dl.xdims, args.learning_rate)
     if args.restore:
         model.restore()
     else:
