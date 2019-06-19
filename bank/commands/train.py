@@ -1,3 +1,4 @@
+import sys
 import time
 import numpy as np
 import tensorflow as tf
@@ -23,6 +24,9 @@ def cmd_train(args):
     save_time = log_time = time.time()
     i = 0
     while True:
+        # flush stdout
+        sys.stdout.flush()
+
         i += 1
         if i >= args.nsteps: break
         xs, ys = ds.next_batch()
