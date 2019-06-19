@@ -9,10 +9,6 @@ class DataLoader(object):
     def __init__(self, data_file_path):
         self.__data_file_path = data_file_path
 
-        self.__titles = ['age', 'job', 'marital', 'education', 'default', 'housing', 'loan', 'contact', 'month',
-                         'day_of_week', 'duration', 'campaign', 'pdays', 'previous', 'poutcome', 'emp.var.rate',
-                         'cons.price.idx', 'cons.conf.idx', 'euribor3m', 'nr.employed', 'y']
-
         self.__xs, self.__ys = DataLoader.__load_embedding(self.__data_file_path)
 
         self.__train_xs, self.__train_ys, self.__test_xs, self.__test_ys = DataLoader.split_datasets(self.__xs, self.__ys)
@@ -85,17 +81,20 @@ class DataLoader(object):
         # create embeded dict
         embeded_dict = DataLoader.__create_embedding_dict()
 
-        # embedding
-        em_datas = np.empty((len(datas), 0), dtype=np.float)
+        # embedding x
+        em_xs = np.empty((len(datas), 0), dtype=np.float)
+        em_ys = np.array([], dtype=np.float)
         for i in range(len(titles)):
             t = titles[i]
             f = embeded_dict[t]
             if f is None: continue
-            _, x = f(datas[:, i])
+            _, e = f(datas[:, i])
+            if t == 'y':
+                em_ys = e
+            else:
+                em_xs = np.concatenate([em_xs, e.reshape(len(datas), -1)], axis=1)
 
-            em_datas = np.concatenate([em_datas, x.reshape(len(datas), -1)], axis=1)
-
-        return em_datas[:, :-1], em_datas[:, -1]
+        return em_xs, em_ys
 
 
 
