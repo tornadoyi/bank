@@ -9,7 +9,7 @@ class DataLoader(object):
     def __init__(self, data_file_path):
         self.__data_file_path = data_file_path
 
-        self.__xs, self.__ys = DataLoader.__load_embedding(self.__data_file_path)
+        self.__xs, self.__ys, self._indexes = DataLoader.__load_embedding(self.__data_file_path)
 
         self.__train_xs, self.__train_ys, self.__test_xs, self.__test_ys = DataLoader.split_datasets(self.__xs, self.__ys)
 
@@ -84,6 +84,7 @@ class DataLoader(object):
         # embedding x
         em_xs = np.empty((len(datas), 0), dtype=np.float)
         em_ys = np.array([], dtype=np.float)
+        indexes = {}
         for i in range(len(titles)):
             t = titles[i]
             f = embeded_dict[t]
@@ -92,9 +93,11 @@ class DataLoader(object):
             if t == 'y':
                 em_ys = e
             else:
-                em_xs = np.concatenate([em_xs, e.reshape(len(datas), -1)], axis=1)
+                e = e.reshape(len(datas), -1)
+                indexes[t] = (em_xs.shape[1], em_xs.shape[1] + e.shape[1])
+                em_xs = np.concatenate([em_xs, e], axis=1)
 
-        return em_xs, em_ys
+        return em_xs, em_ys, indexes
 
 
 
