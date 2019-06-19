@@ -26,7 +26,7 @@ def parse_args():
     train = sparser.add_parser('test', help='train models')
     train.set_defaults(func=partial(_parse_command, 'test'))
     train.add_argument('-s', '--save-path', type=str, default=save_path, help='checkpoint output path')
-    train.add_argument('-d', '--data-path', type=str, help='data path')
+    train.add_argument('-d', '--data-path', type=str, required=True, help='data path')
 
     args = parser.parse_args()
     if getattr(args, 'func', None) is None:
