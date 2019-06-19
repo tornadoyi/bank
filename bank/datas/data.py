@@ -154,10 +154,7 @@ class DataLoader(object):
 
         def __day_of_week(ds): return __enum(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'], ds)
 
-        def __pdays(ds):
-            ds = ds.astype(np.float)
-            ds[ds == 999] = 0
-            return None, ds / 100.0
+        def __pdays(ds): return __enum(['999'] + [str(i) for i in range(30)], ds)
 
         def __poutcome(ds): return __enum(["failure", "nonexistent", "success"], ds)
 
