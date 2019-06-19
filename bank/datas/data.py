@@ -156,6 +156,8 @@ class DataLoader(object):
 
         def __pdays(ds): return __enum(['999'] + [str(i) for i in range(30)], ds)
 
+        def __previous(ds): return __enum([str(i) for i in range(7)], ds)
+
         def __poutcome(ds): return __enum(["failure", "nonexistent", "success"], ds)
 
         embeded_dict = {
@@ -172,7 +174,7 @@ class DataLoader(object):
             'duration': None,  # __norm10000,        # max 3643
             'campaign': __norm100,
             'pdays': __pdays,
-            'previous': __norm10,
+            'previous': __previous,
             'poutcome': __poutcome,
             'emp.var.rate': __float,
             'cons.price.idx': __norm100,
