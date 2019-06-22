@@ -97,6 +97,16 @@ class DataLoader(object):
                 indexes[t] = (em_xs.shape[1], em_xs.shape[1] + e.shape[1])
                 em_xs = np.concatenate([em_xs, e], axis=1)
 
+
+        # cross features
+        def feature(name):
+            st, ed = indexes[name]
+            return em_xs[:, st:ed].reshape(len(datas), -1)
+
+        e = feature('nr.employed') + feature('housing')[:, -1].reshape(-1, 1) + feature('loan')[:, 0].reshape(-1, 1)
+        indexes['c_good'] = (em_xs.shape[1], em_xs.shape[1] + e.shape[1])
+        em_xs = np.concatenate([em_xs, e], axis=1)
+
         return em_xs, em_ys, indexes
 
 
