@@ -52,6 +52,7 @@ class LogisticsRegression(ModelBase):
                 kernel_regularizer=slim.l2_regularizer(0.1),
                 bias_regularizer=slim.l2_regularizer(0.1),
             )
+            l = tf.layers.batch_normalization(l)
 
         lout = tf.reshape(l, shape=[-1])
 
