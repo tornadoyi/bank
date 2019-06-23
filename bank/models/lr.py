@@ -41,16 +41,16 @@ class LogisticsRegression(ModelBase):
         self._labels = tf.placeholder(shape=[None], dtype=tf.float32)
 
         l = self._inputs
-        hidden_layers = [128, 64, 32, 1]
+        hidden_layers = [32, 1]
         for i in range(len(hidden_layers)):
             l = tf.layers.dense(
                 l,
                 hidden_layers[i],
-                activation=tf.nn.tanh,
+                activation=tf.nn.leaky_relu,
                 kernel_initializer=tf.truncated_normal_initializer(stddev=0.1),
                 bias_initializer=tf.truncated_normal_initializer(stddev=0.1),
-                kernel_regularizer=slim.l2_regularizer(0.05),
-                bias_regularizer=slim.l2_regularizer(0.05),
+                kernel_regularizer=slim.l2_regularizer(0.1),
+                bias_regularizer=slim.l2_regularizer(0.1),
             )
 
         lout = tf.reshape(l, shape=[-1])

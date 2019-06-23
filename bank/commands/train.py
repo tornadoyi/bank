@@ -2,7 +2,7 @@ import sys
 import time
 import numpy as np
 import tensorflow as tf
-from bank.datas import load_training_data
+from bank.datas import load_training_data, load_testing_data
 from bank.models import LogisticsRegression
 from prettytable import PrettyTable
 
@@ -10,12 +10,17 @@ BATCH = 128
 
 def cmd_train(args):
     # load datas
-    dl = load_training_data()
-    ds = rolling_dataset(*dl.training, BATCH)
+    #dl = load_training_data()
+    #ds = rolling_dataset(*dl.training, BATCH)
+
+    train = load_training_data()
+    test = load_testing_data()
+
+    ds = rolling_dataset(*train.datasets, BATCH)
 
     # create model
     sess = tf.Session()
-    model = LogisticsRegression(sess, args.save_path, dl.xdims, args.learning_rate)
+    model = LogisticsRegression(sess, args.save_path, train.xdims, args.learning_rate)
     if args.restore:
         model.restore()
     else:
@@ -36,7 +41,8 @@ def cmd_train(args):
         model.train(xs, ys)
 
         # evaluate
-        xs, ys = dl.test
+        #xs, ys = dl.test
+        xs, ys = test.datasets
         probs = model.predict(xs)
         cond = (probs >= 0.5) == (ys == 1.0)
         acc = np.sum(cond) / len(cond)
