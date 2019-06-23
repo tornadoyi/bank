@@ -178,6 +178,8 @@ class DataLoader(object):
 
         def __poutcome(ds): return __enum(["failure", "nonexistent", "success"], ds)
 
+        def _campain(ds): return __enum([str(i) for i in range(40)], ds)
+
         embeded_dict = {
             'age': __norm100,
             'job': __job,
@@ -190,7 +192,7 @@ class DataLoader(object):
             'month': __month,
             'day_of_week': __day_of_week,
             'duration': None,  # __norm10000,        # max 3643
-            'campaign': __norm100,
+            'campaign': _campain,
             'pdays': __pdays,
             'previous': __norm10,
             'poutcome': __poutcome,
